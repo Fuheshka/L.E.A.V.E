@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 5878796999206901185}
   - component: {fileID: 1489404195956588978}
   - component: {fileID: 7378185032986945314}
-  - component: {fileID: 8486760781036678508}
   m_Layer: 0
   m_Name: Clone
   m_TagString: Untagged
@@ -163,20 +162,3 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &8486760781036678508
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1407736333954907599}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0baf8e748f3e45db9edc57317d9bf26, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 5
-  jumpForce: 8
-  startPoint: {fileID: 0}
-  shadowPrefab: {fileID: 0}
-  maxShadows: 3
