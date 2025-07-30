@@ -39,9 +39,16 @@ public class PlayerController : MonoBehaviour
 
     void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.W) && isGrounded)
+        if (Input.GetKeyDown(KeyCode.W))
         {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+            // Raycast вниз для проверки земли
+            float rayLength = 0.2f;
+            Vector2 origin = transform.position;
+            RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, rayLength, LayerMask.GetMask("Default"));
+            if (hit.collider != null)
+            {
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+            }
         }
     }
 
