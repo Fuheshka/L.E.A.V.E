@@ -16,11 +16,14 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
     private bool isGrounded;
     private Vector2 startPosition;
+    private Vector2 checkpointPosition;
+    private bool hasCheckpoint = false;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         startPosition = startPoint ? startPoint.position : transform.position;
+        checkpointPosition = startPosition;
     }
 
     void Update()
@@ -41,13 +44,16 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.W))
         {
-            // Raycast вниз для проверки земли
-            float rayLength = 0.2f;
-            Vector2 origin = transform.position;
-            RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, rayLength, LayerMask.GetMask("Default"));
-            if (hit.collider != null)
+            // Прыжок разрешён только если вертикальная скорость почти нулевая
+            if (Mathf.Abs(rb.linearVelocity.y) < 0.05f)
             {
-                rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+                float rayLength = 0.2f;
+                Vector2 origin = transform.position;
+                RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, rayLength, LayerMask.GetMask("Default"));
+                if (hit.collider != null)
+                {
+                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+                }
             }
         }
     }
@@ -59,14 +65,25 @@ public class PlayerController : MonoBehaviour
             // Freeze and leave shadow
             GameObject shadow = Instantiate(shadowPrefab, transform.position, Quaternion.identity);
             shadows.Add(shadow);
-            // Teleport to start
-            transform.position = startPosition;
+            // Teleport to checkpoint (или старт)
+            transform.position = hasCheckpoint ? checkpointPosition : startPosition;
             rb.linearVelocity = Vector2.zero;
+
+            // Мгновенно переместить камеру к игроку
+            CameraFollow cam = Camera.main.GetComponent<CameraFollow>();
+            if (cam != null)
+                cam.SnapToTarget();
 
             // Проверка: находимся ли на земле после телепорта
             Collider2D groundCheck = Physics2D.OverlapCircle(transform.position, 0.1f, LayerMask.GetMask("Default"));
             isGrounded = groundCheck != null;
         }
+    }
+    // Вызывается чекпоинтом
+    public void SetCheckpoint(Vector2 pos)
+    {
+        checkpointPosition = pos;
+        hasCheckpoint = true;
     }
 
     void ResetShadows()
