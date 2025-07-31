@@ -16,6 +16,8 @@ public class Checkpoint : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         PlayerController player = other.GetComponent<PlayerController>();
+        if (player == null)
+            player = other.GetComponentInParent<PlayerController>();
         if (player != null && !activated)
         {
             player.SetCheckpoint(transform.position);

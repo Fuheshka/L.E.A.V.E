@@ -14,24 +14,71 @@ public class PlayerController : MonoBehaviour
     private List<GameObject> shadows = new List<GameObject>();
 
     private Rigidbody2D rb;
+    private Animator anim;
     private bool isGrounded;
     private Vector2 startPosition;
     private Vector2 checkpointPosition;
     private bool hasCheckpoint = false;
+    private bool wasGrounded = true;
+
+    private bool landingTriggered = false;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        // Ищем Animator на дочернем объекте Player
+        Transform playerVisual = transform.Find("Player");
+        if (playerVisual != null)
+            anim = playerVisual.GetComponent<Animator>();
+        else
+            anim = GetComponent<Animator>();
         startPosition = startPoint ? startPoint.position : transform.position;
         checkpointPosition = startPosition;
+        // Установить начальный масштаб
+        transform.localScale = new Vector3(1, 1, 1);
     }
 
     void Update()
     {
+        float move = Input.GetAxis("Horizontal");
         Move();
         Jump();
         HandleShadow();
         ResetShadows();
+
+        // Reset landing trigger when leaving ground
+        if (wasGrounded && !isGrounded)
+        {
+            landingTriggered = false;
+        }
+
+        // Переключение анимаций
+        if (anim != null)
+        {
+            anim.SetBool("isRunning", Mathf.Abs(move) > 0.01f);
+            bool jumping = !isGrounded && rb.linearVelocity.y > 0.1f;
+            bool falling = !isGrounded && rb.linearVelocity.y < -0.1f;
+
+            // Fix: Reset falling if grounded or vertical velocity is not negative enough
+            if (isGrounded || rb.linearVelocity.y >= -0.1f)
+            {
+                falling = false;
+            }
+
+            anim.SetBool("isJumping", jumping);
+            anim.SetBool("isFalling", falling);
+            anim.SetBool("isGrounded", isGrounded);
+        }
+
+        // Поворот игрока в сторону движения (меняем только знак X)
+        Vector3 scale = transform.localScale;
+        if (move > 0.01f)
+            transform.localScale = new Vector3(Mathf.Abs(scale.x), scale.y, scale.z);
+        else if (move < -0.01f)
+            transform.localScale = new Vector3(-Mathf.Abs(scale.x), scale.y, scale.z);
+
+        // Обновляем wasGrounded в самом конце кадра
+        wasGrounded = isGrounded;
     }
 
     void Move()
@@ -103,7 +150,9 @@ public class PlayerController : MonoBehaviour
         foreach (var contact in collision.contacts)
         {
             if (contact.normal.y > 0.5f)
+            {
                 isGrounded = true;
+            }
 
             // Если боковая поверхность
             if (Mathf.Abs(contact.normal.x) > 0.5f)
