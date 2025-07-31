@@ -15,7 +15,11 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D rb;
     private Animator anim;
+    private Collider2D playerCollider;
     private bool isGrounded;
+    private bool isTouchingAnyCollider;
+    private bool isTouchingGroundBottom;
+    public float groundContactThreshold = 0.1f; // adjustable threshold for bottom contact
     private Vector2 startPosition;
     private Vector2 checkpointPosition;
     private bool hasCheckpoint = false;
@@ -29,9 +33,15 @@ public class PlayerController : MonoBehaviour
         // Ищем Animator на дочернем объекте Player
         Transform playerVisual = transform.Find("Player");
         if (playerVisual != null)
+        {
             anim = playerVisual.GetComponent<Animator>();
+            playerCollider = playerVisual.GetComponent<Collider2D>();
+        }
         else
+        {
             anim = GetComponent<Animator>();
+            playerCollider = GetComponent<Collider2D>();
+        }
         startPosition = startPoint ? startPoint.position : transform.position;
         checkpointPosition = startPosition;
         // Установить начальный масштаб
@@ -55,18 +65,30 @@ public class PlayerController : MonoBehaviour
         // Переключение анимаций
         if (anim != null)
         {
-            anim.SetBool("isRunning", Mathf.Abs(move) > 0.01f);
-            bool jumping = !isGrounded && rb.linearVelocity.y > 0.1f;
-            bool falling = !isGrounded && rb.linearVelocity.y < -0.1f;
+            bool canJump = isTouchingGroundBottom || isGrounded;
+            bool movingHorizontally = Mathf.Abs(move) > 0.01f;
 
-            // Fix: Reset falling if grounded or vertical velocity is not negative enough
-            if (isGrounded || rb.linearVelocity.y >= -0.1f)
+            if (movingHorizontally && canJump)
             {
-                falling = false;
+                anim.SetBool("isRunning", true);
+                anim.SetBool("isJumping", false);
+                anim.SetBool("isFalling", false);
             }
+            else
+            {
+                anim.SetBool("isRunning", movingHorizontally);
+                bool jumping = !isGrounded && rb.linearVelocity.y > 0.1f;
+                // Increase falling threshold to -0.3f to avoid flickering falling animation
+                bool falling = !isGrounded && rb.linearVelocity.y < -0.3f;
 
-            anim.SetBool("isJumping", jumping);
-            anim.SetBool("isFalling", falling);
+                if (isGrounded || rb.linearVelocity.y >= -0.3f)
+                {
+                    falling = false;
+                }
+
+                anim.SetBool("isJumping", jumping);
+                anim.SetBool("isFalling", falling);
+            }
             anim.SetBool("isGrounded", isGrounded);
         }
 
@@ -91,16 +113,10 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.W))
         {
-            // Прыжок разрешён только если вертикальная скорость почти нулевая
-            if (Mathf.Abs(rb.linearVelocity.y) < 0.05f)
+            // Allow jump only if touching ground with bottom part of collider
+            if (isTouchingGroundBottom)
             {
-                float rayLength = 0.2f;
-                Vector2 origin = transform.position;
-                RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, rayLength, LayerMask.GetMask("Default"));
-                if (hit.collider != null)
-                {
-                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-                }
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
             }
         }
     }
@@ -147,17 +163,23 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+        isTouchingAnyCollider = true;
+        isTouchingGroundBottom = false;
+        float colliderBottomY = playerCollider.bounds.min.y;
         foreach (var contact in collision.contacts)
         {
+            if (contact.point.y - colliderBottomY <= groundContactThreshold)
+            {
+                isTouchingGroundBottom = true;
+            }
+
             if (contact.normal.y > 0.5f)
             {
                 isGrounded = true;
             }
 
-            // Если боковая поверхность
             if (Mathf.Abs(contact.normal.x) > 0.5f)
             {
-                // Соскальзывание вниз
                 rb.linearVelocity = new Vector2(rb.linearVelocity.x, -1f);
             }
         }
@@ -165,11 +187,23 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionStay2D(Collision2D collision)
     {
+        isTouchingAnyCollider = true;
+        isTouchingGroundBottom = false;
+        float colliderBottomY = playerCollider.bounds.min.y;
         foreach (var contact in collision.contacts)
         {
+            if (contact.point.y - colliderBottomY <= groundContactThreshold)
+            {
+                isTouchingGroundBottom = true;
+            }
+
+            if (contact.normal.y > 0.5f)
+            {
+                isGrounded = true;
+            }
+
             if (Mathf.Abs(contact.normal.x) > 0.5f)
             {
-                // Соскальзывание вниз
                 rb.linearVelocity = new Vector2(rb.linearVelocity.x, -1f);
             }
         }
@@ -177,6 +211,8 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionExit2D(Collision2D collision)
     {
+        isTouchingAnyCollider = false;
+        isTouchingGroundBottom = false;
         isGrounded = false;
     }
 }
