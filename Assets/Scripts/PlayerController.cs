@@ -19,15 +19,12 @@ public class PlayerController : MonoBehaviour
     private Animator anim;
     private Collider2D playerCollider;
     private bool isGrounded;
-    private bool isTouchingAnyCollider;
     private bool isTouchingGroundBottom;
     public float groundContactThreshold = 0.1f; // adjustable threshold for bottom contact
     private Vector2 startPosition;
     private Vector2 checkpointPosition;
     private bool hasCheckpoint = false;
-    private bool wasGrounded = true;
 
-    private bool landingTriggered = false;
 
     void Start()
     {
@@ -82,12 +79,6 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        // Reset landing trigger when leaving ground
-        if (wasGrounded && !isGrounded)
-        {
-            landingTriggered = false;
-        }
-
         // Переключение анимаций
         if (anim != null)
         {
@@ -124,9 +115,6 @@ public class PlayerController : MonoBehaviour
             transform.localScale = new Vector3(Mathf.Abs(scale.x), scale.y, scale.z);
         else if (move < -0.01f)
             transform.localScale = new Vector3(-Mathf.Abs(scale.x), scale.y, scale.z);
-
-        // Обновляем wasGrounded в самом конце кадра
-        wasGrounded = isGrounded;
     }
 
     void UpdateShadowCounter()
@@ -199,7 +187,6 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        isTouchingAnyCollider = true;
         isTouchingGroundBottom = false;
         float colliderBottomY = playerCollider.bounds.min.y;
         foreach (var contact in collision.contacts)
@@ -223,7 +210,6 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionStay2D(Collision2D collision)
     {
-        isTouchingAnyCollider = true;
         isTouchingGroundBottom = false;
         float colliderBottomY = playerCollider.bounds.min.y;
         foreach (var contact in collision.contacts)
@@ -247,7 +233,6 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionExit2D(Collision2D collision)
     {
-        isTouchingAnyCollider = false;
         isTouchingGroundBottom = false;
         isGrounded = false;
     }
