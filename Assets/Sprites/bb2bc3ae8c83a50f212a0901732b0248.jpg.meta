@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 7261504d8e8d11540a891e1d6804d082
+guid: 3e1695377834e435485b6fa7b90da7a4
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1371592106651991160
-    second: krovat`1_0
+      213: -3457879903807119162
+    second: bb2bc3ae8c83a50f212a0901732b0248_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: krovat`1_0
+      name: bb2bc3ae8c83a50f212a0901732b0248_0
       rect:
         serializedVersion: 2
-        x: 256
-        y: 707
-        width: 385
-        height: 171
+        x: 0
+        y: 0
+        width: 700
+        height: 700
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 883474afe3027fce0800000000000000
-      internalID: -1371592106651991160
+      spriteID: 6c06d915c842300d0800000000000000
+      internalID: -3457879903807119162
       vertices: []
       indices: 
       edges: []
@@ -147,8 +147,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      krovat`1_0: -1371592106651991160
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
