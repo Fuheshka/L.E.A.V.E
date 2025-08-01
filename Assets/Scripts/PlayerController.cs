@@ -56,6 +56,28 @@ public class PlayerController : MonoBehaviour
         HandleShadow();
         ResetShadows();
 
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            if (hasCheckpoint)
+            {
+                // Teleport player to checkpoint
+                transform.position = checkpointPosition;
+                rb.linearVelocity = Vector2.zero;
+
+                // Reset shadows
+                foreach (var s in shadows)
+                {
+                    Destroy(s);
+                }
+                shadows.Clear();
+
+                // Snap camera to player
+                CameraFollow cam = Camera.main.GetComponent<CameraFollow>();
+                if (cam != null)
+                    cam.SnapToTarget();
+            }
+        }
+
         // Reset landing trigger when leaving ground
         if (wasGrounded && !isGrounded)
         {
@@ -151,7 +173,7 @@ public class PlayerController : MonoBehaviour
 
     void ResetShadows()
     {
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.Q))
         {
             foreach (var s in shadows)
             {
