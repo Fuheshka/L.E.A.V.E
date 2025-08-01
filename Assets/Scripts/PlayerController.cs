@@ -1,6 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour
@@ -14,7 +12,6 @@ public class PlayerController : MonoBehaviour
     public GameObject shadowPrefab;
     public int maxShadows = 3;
     private List<GameObject> shadows = new List<GameObject>();
-    public TMP_Text shadowCounterText;
 
     private Rigidbody2D rb;
     private Animator anim;
@@ -49,8 +46,6 @@ public class PlayerController : MonoBehaviour
         checkpointPosition = startPosition;
         // Установить начальный масштаб
         transform.localScale = new Vector3(1, 1, 1);
-
-        UpdateShadowCounter();
     }
 
     void Update()
@@ -80,8 +75,6 @@ public class PlayerController : MonoBehaviour
                 CameraFollow cam = Camera.main.GetComponent<CameraFollow>();
                 if (cam != null)
                     cam.SnapToTarget();
-
-                UpdateShadowCounter();
             }
         }
 
@@ -132,15 +125,6 @@ public class PlayerController : MonoBehaviour
         wasGrounded = isGrounded;
     }
 
-    void UpdateShadowCounter()
-    {
-        if (shadowCounterText != null)
-        {
-            int availableShadows = maxShadows - shadows.Count;
-            shadowCounterText.text = "Shadows: " + availableShadows.ToString();
-        }
-    }
-
     void Move()
     {
         float move = Input.GetAxis("Horizontal");
@@ -178,8 +162,6 @@ public class PlayerController : MonoBehaviour
             // Проверка: находимся ли на земле после телепорта
             Collider2D groundCheck = Physics2D.OverlapCircle(transform.position, 0.1f, LayerMask.GetMask("Default"));
             isGrounded = groundCheck != null;
-
-            UpdateShadowCounter();
         }
     }
     // Вызывается чекпоинтом
@@ -198,8 +180,6 @@ public class PlayerController : MonoBehaviour
                 Destroy(s);
             }
             shadows.Clear();
-
-            UpdateShadowCounter();
         }
     }
 
@@ -220,7 +200,7 @@ public class PlayerController : MonoBehaviour
                 isGrounded = true;
             }
 
-            if (Mathf.Abs(contact.normal.x) > 0.5f)
+            if (Mathf.Abs(contact.normal.x) > 0.5f && !isGrounded && rb.linearVelocity.y < -0.3f)
             {
                 rb.linearVelocity = new Vector2(rb.linearVelocity.x, -1f);
             }
@@ -244,8 +224,8 @@ public class PlayerController : MonoBehaviour
                 isGrounded = true;
             }
 
-            if (Mathf.Abs(contact.normal.x) > 0.5f)
-                       {
+            if (Mathf.Abs(contact.normal.x) > 0.5f && !isGrounded && rb.linearVelocity.y < -0.3f)
+            {
                 rb.linearVelocity = new Vector2(rb.linearVelocity.x, -1f);
             }
         }
