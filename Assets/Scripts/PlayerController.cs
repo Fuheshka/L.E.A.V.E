@@ -18,7 +18,6 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
     private Animator anim;
     private Collider2D playerCollider;
-    private bool isGrounded;
     private bool isTouchingGroundBottom;
     public float groundContactThreshold = 0.1f; // adjustable threshold for bottom contact
     private Vector2 startPosition;
@@ -82,7 +81,7 @@ public class PlayerController : MonoBehaviour
         // Переключение анимаций
         if (anim != null)
         {
-            bool canJump = isTouchingGroundBottom || isGrounded;
+            bool canJump = isTouchingGroundBottom;
             bool movingHorizontally = Mathf.Abs(move) > 0.01f;
 
             if (movingHorizontally && canJump)
@@ -94,11 +93,11 @@ public class PlayerController : MonoBehaviour
             else
             {
                 anim.SetBool("isRunning", movingHorizontally);
-                bool jumping = !isGrounded && rb.linearVelocity.y > 0.1f;
+                bool jumping = !isTouchingGroundBottom && rb.linearVelocity.y > 0.1f;
                 // Increase falling threshold to -0.3f to avoid flickering falling animation
-                bool falling = !isGrounded && rb.linearVelocity.y < -0.3f;
+                bool falling = !isTouchingGroundBottom && rb.linearVelocity.y < -0.3f;
 
-                if (isGrounded || rb.linearVelocity.y >= -0.3f)
+                if (isTouchingGroundBottom || rb.linearVelocity.y >= -0.3f)
                 {
                     falling = false;
                 }
@@ -106,7 +105,7 @@ public class PlayerController : MonoBehaviour
                 anim.SetBool("isJumping", jumping);
                 anim.SetBool("isFalling", falling);
             }
-            anim.SetBool("isGrounded", isGrounded);
+            anim.SetBool("isGrounded", isTouchingGroundBottom);
         }
 
         // Поворот игрока в сторону движения (меняем только знак X)
@@ -161,7 +160,7 @@ public class PlayerController : MonoBehaviour
 
             // Проверка: находимся ли на земле после телепорта
             Collider2D groundCheck = Physics2D.OverlapCircle(transform.position, 0.1f, LayerMask.GetMask("Default"));
-            isGrounded = groundCheck != null;
+            isTouchingGroundBottom = groundCheck != null;
             UpdateShadowCounter();
         }
     }
@@ -196,12 +195,7 @@ public class PlayerController : MonoBehaviour
                 isTouchingGroundBottom = true;
             }
 
-            if (contact.normal.y > 0.5f)
-            {
-                isGrounded = true;
-            }
-
-            if (Mathf.Abs(contact.normal.x) > 0.5f && !isGrounded && rb.linearVelocity.y < -0.3f)
+            if (Mathf.Abs(contact.normal.x) > 0.5f && !isTouchingGroundBottom && rb.linearVelocity.y < -0.3f)
             {
                 rb.linearVelocity = new Vector2(rb.linearVelocity.x, -1f);
             }
@@ -219,12 +213,7 @@ public class PlayerController : MonoBehaviour
                 isTouchingGroundBottom = true;
             }
 
-            if (contact.normal.y > 0.5f)
-            {
-                isGrounded = true;
-            }
-
-            if (Mathf.Abs(contact.normal.x) > 0.5f && !isGrounded && rb.linearVelocity.y < -0.3f)
+            if (Mathf.Abs(contact.normal.x) > 0.5f && !isTouchingGroundBottom && rb.linearVelocity.y < -0.3f)
             {
                 rb.linearVelocity = new Vector2(rb.linearVelocity.x, -1f);
             }
@@ -234,6 +223,5 @@ public class PlayerController : MonoBehaviour
     void OnCollisionExit2D(Collision2D collision)
     {
         isTouchingGroundBottom = false;
-        isGrounded = false;
     }
 }
