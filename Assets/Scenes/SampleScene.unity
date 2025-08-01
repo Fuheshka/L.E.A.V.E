@@ -293,7 +293,7 @@ Transform:
   m_GameObject: {fileID: 83490499}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 98.56999, y: 16.72, z: 0.030603698}
+  m_LocalPosition: {x: 98.56999, y: 15.1, z: 0.030603698}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -727,13 +727,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 124944905}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0.17344338, w: 0.98484385}
-  m_LocalPosition: {x: 111.46001, y: 7.87, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0.0815186, w: 0.99667186}
+  m_LocalPosition: {x: 111.18, y: 7.18, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -19.976}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -9.352}
 --- !u!1 &138532996
 GameObject:
   m_ObjectHideFlags: 0
@@ -801,10 +801,10 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDamping: 0
+  m_LinearDamping: 0.5
   m_AngularDamping: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 6200000, guid: 8d7cd1519f3c6c94589687419bd60ccf, type: 2}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -2460,7 +2460,7 @@ Transform:
   m_GameObject: {fileID: 763711612}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 98.509995, y: 13.67, z: 0}
+  m_LocalPosition: {x: 98.509995, y: 12.02, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
