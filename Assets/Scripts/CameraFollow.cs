@@ -13,6 +13,10 @@ public class CameraFollow : MonoBehaviour
         if (target == null) return;
         Vector3 desiredPosition = target.position + offset;
         transform.position = Vector3.SmoothDamp(transform.position, desiredPosition, ref velocity, smoothTime);
+        
+        var p = transform.position;
+        if (p.y < 4) p.y = 4;
+        transform.position = p;
     }
 
     public void SnapToTarget()
