@@ -24,6 +24,15 @@ public class PlayerController : MonoBehaviour
     private Vector2 checkpointPosition;
     private bool hasCheckpoint = false;
 
+    [Header("Audio")]
+    [SerializeField] private string jumpSoundName = "jump";
+    [SerializeField] private string respawnSoundName = "respawn";
+    [SerializeField] private string runSoundName = "run";
+    [SerializeField] private bool playRunSound = true;
+    [SerializeField] private float runSoundInterval = 0.5f;
+    private float lastRunSoundTime = 0f;
+    private bool isPlayingRunSound = false;
+
 
     void Start()
     {
@@ -54,6 +63,7 @@ public class PlayerController : MonoBehaviour
         Jump();
         HandleShadow();
         ResetShadows();
+        HandleRunSound();
 
         if (Input.GetKeyDown(KeyCode.R))
         {
@@ -74,6 +84,9 @@ public class PlayerController : MonoBehaviour
                 CameraFollow cam = Camera.main.GetComponent<CameraFollow>();
                 if (cam != null)
                     cam.SnapToTarget();
+                
+                // Play respawn sound
+                PlaySound(respawnSoundName);
                 UpdateShadowCounter();
             }
         }
@@ -124,6 +137,7 @@ public class PlayerController : MonoBehaviour
             shadowCounterText.text = "Shadows: " + availableShadows.ToString();
         }
     }
+    
     void Move()
     {
         float move = Input.GetAxis("Horizontal");
@@ -138,6 +152,8 @@ public class PlayerController : MonoBehaviour
             if (isTouchingGroundBottom)
             {
                 rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+                // Play jump sound
+                PlaySound(jumpSoundName);
             }
         }
     }
@@ -161,9 +177,44 @@ public class PlayerController : MonoBehaviour
             // Проверка: находимся ли на земле после телепорта
             Collider2D groundCheck = Physics2D.OverlapCircle(transform.position, 0.1f, LayerMask.GetMask("Default"));
             isTouchingGroundBottom = groundCheck != null;
+            
+            // Play respawn sound
+            PlaySound(respawnSoundName);
             UpdateShadowCounter();
         }
     }
+    
+    void HandleRunSound()
+    {
+        if (!playRunSound || AudioManager.instance == null) return;
+        
+        bool isMoving = Mathf.Abs(rb.linearVelocity.x) > 0.1f;
+        bool isGrounded = isTouchingGroundBottom;
+        
+        // Start playing run sound if moving on ground
+        if (isMoving && isGrounded && !isPlayingRunSound)
+        {
+            isPlayingRunSound = true;
+            lastRunSoundTime = Time.time;
+            // Play run sound immediately when starting to move
+            AudioManager.instance.PlaySFX(runSoundName);
+        }
+        // Continue playing run sound periodically while moving on ground
+        else if (isMoving && isGrounded && isPlayingRunSound)
+        {
+            if (Time.time - lastRunSoundTime >= runSoundInterval)
+            {
+                AudioManager.instance.PlaySFX(runSoundName);
+                lastRunSoundTime = Time.time;
+            }
+        }
+        // Stop playing run sound when not moving or not grounded
+        else if (isPlayingRunSound && (!isMoving || !isGrounded))
+        {
+            isPlayingRunSound = false;
+        }
+    }
+    
     // Вызывается чекпоинтом
     public void SetCheckpoint(Vector2 pos)
     {
@@ -223,5 +274,14 @@ public class PlayerController : MonoBehaviour
     void OnCollisionExit2D(Collision2D collision)
     {
         isTouchingGroundBottom = false;
+    }
+    
+    // Helper method to play sound effects through AudioManager
+    private void PlaySound(string soundName)
+    {
+        if (AudioManager.instance != null && !string.IsNullOrEmpty(soundName))
+        {
+            AudioManager.instance.PlaySFX(soundName);
+        }
     }
 }

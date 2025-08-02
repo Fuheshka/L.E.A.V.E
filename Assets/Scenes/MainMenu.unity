@@ -869,7 +869,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 202.6, y: -196}
+  m_AnchoredPosition: {x: 202.59998, y: -196}
   m_SizeDelta: {x: 140, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &734419977
@@ -1512,11 +1512,11 @@ Transform:
   m_GameObject: {fileID: 1375082334}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -955.56, y: -540.78, z: 0}
+  m_LocalPosition: {x: 4.4400024, y: -0.7800293, z: 0}
   m_LocalScale: {x: -5.5999994, y: 5.5999994, z: 5.5999994}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 1993283045}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!70 &1375082336
 CapsuleCollider2D:
@@ -2099,11 +2099,11 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 1993283045}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -4.080017, y: -1078}
+  m_AnchoredPosition: {x: -4.080017, y: 2}
   m_SizeDelta: {x: 5.799988, y: 4.3200073}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!212 &1929174093
@@ -2171,6 +2171,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1958478660}
   - component: {fileID: 1958478659}
+  - component: {fileID: 1958478661}
   m_Layer: 0
   m_Name: MainMenuManager
   m_TagString: Untagged
@@ -2190,6 +2191,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdd18f1d0a79747c98069e61c83888f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  buttonClickSound: button_click
 --- !u!4 &1958478660
 Transform:
   m_ObjectHideFlags: 0
@@ -2205,6 +2207,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1958478661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1958478658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a0fe1fb240724c238898fbc21534ca8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  backgroundMusicName: Background
+  playMusicOnStart: 1
 --- !u!1 &1993283041
 GameObject:
   m_ObjectHideFlags: 0
@@ -2274,7 +2290,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 187199266}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -2299,11 +2315,9 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1929174092}
   - {fileID: 982056309}
   - {fileID: 706831457}
   - {fileID: 734419976}
-  - {fileID: 1375082335}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2311,11 +2325,79 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1001 &41715621767167617
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 7348361392580753487, guid: afabddae0566c40f49e780717993cc29, type: 3}
+      propertyPath: m_Name
+      value: AudioManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 8389216542183437253, guid: afabddae0566c40f49e780717993cc29, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 5.4651494
+      objectReference: {fileID: 0}
+    - target: {fileID: 8389216542183437253, guid: afabddae0566c40f49e780717993cc29, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.99059534
+      objectReference: {fileID: 0}
+    - target: {fileID: 8389216542183437253, guid: afabddae0566c40f49e780717993cc29, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.007550036
+      objectReference: {fileID: 0}
+    - target: {fileID: 8389216542183437253, guid: afabddae0566c40f49e780717993cc29, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8389216542183437253, guid: afabddae0566c40f49e780717993cc29, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8389216542183437253, guid: afabddae0566c40f49e780717993cc29, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8389216542183437253, guid: afabddae0566c40f49e780717993cc29, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8389216542183437253, guid: afabddae0566c40f49e780717993cc29, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8389216542183437253, guid: afabddae0566c40f49e780717993cc29, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8389216542183437253, guid: afabddae0566c40f49e780717993cc29, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8437810629463835875, guid: afabddae0566c40f49e780717993cc29, type: 3}
+      propertyPath: sfxMixerGroup
+      value: 
+      objectReference: {fileID: 24300002, guid: 0fbef83149d1f4148a58bd9b6272c06b, type: 2}
+    - target: {fileID: 8437810629463835875, guid: afabddae0566c40f49e780717993cc29, type: 3}
+      propertyPath: musicMixerGroup
+      value: 
+      objectReference: {fileID: 24300002, guid: 12722db0df14f47d99a9e39abeb437fb, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: afabddae0566c40f49e780717993cc29, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 187199267}
+  - {fileID: 1929174092}
+  - {fileID: 1375082335}
   - {fileID: 1993283045}
   - {fileID: 1411997201}
   - {fileID: 1958478660}
+  - {fileID: 41715621767167617}
