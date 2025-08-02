@@ -181,7 +181,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 79f7eb9cdf9a143ceb42657ee4c192ed, type: 3}
+  m_Sprite: {fileID: -1203236389595740849, guid: 79f7eb9cdf9a143ceb42657ee4c192ed, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3098,6 +3098,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buttonClickSound: button_click
+  closeExitSound: close_exit
   aboutPanel: {fileID: 12072104}
 --- !u!4 &1958478660
 Transform:
