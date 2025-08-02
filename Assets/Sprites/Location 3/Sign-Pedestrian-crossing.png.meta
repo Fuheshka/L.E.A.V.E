@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 5c379ee2752e94bb98bdf3fbe5e033e8
+guid: ec1d6cb3c8a7e47419653ed3d57c1a5e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6140977624042550148
-    second: CloseX_wbg_0
+      213: 7995672206902565576
+    second: Sign-Pedestrian-crossing_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: CloseX_wbg_0
+      name: Sign-Pedestrian-crossing_0
       rect:
         serializedVersion: 2
-        x: 42
-        y: 20
-        width: 792
-        height: 607
+        x: 67
+        y: 31
+        width: 103
+        height: 375
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 483bdaedc92293550800000000000000
-      internalID: 6140977624042550148
+      spriteID: 8ca14e0628556fe60800000000000000
+      internalID: 7995672206902565576
       vertices: []
       indices: 
       edges: []
@@ -147,8 +147,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      CloseX_wbg_0: 6140977624042550148
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
