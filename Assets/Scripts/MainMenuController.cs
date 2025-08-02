@@ -6,6 +6,9 @@ public class MainMenuController : MonoBehaviour
     [Header("Audio")]
     [SerializeField] private string buttonClickSound = "button_click";
     //[SerializeField] private string gameStartSound = "respawn";
+    
+    [Header("UI Panels")]
+    [SerializeField] private GameObject aboutPanel;
 
     // Method to be called when Play button is clicked
     public void PlayGame()
@@ -43,6 +46,32 @@ public class MainMenuController : MonoBehaviour
         if (AudioManager.instance != null && !string.IsNullOrEmpty(soundName))
         {
             AudioManager.instance.PlaySFX(soundName);
+        }
+    }
+    
+    // Method to be called when About button is clicked
+    public void ShowAboutPanel()
+    {
+        // Play sound effect
+        PlaySound(buttonClickSound);
+        
+        // Show the about panel
+        if (aboutPanel != null)
+        {
+            aboutPanel.SetActive(true);
+        }
+    }
+    
+    // Method to be called when Close button on about panel is clicked
+    public void HideAboutPanel()
+    {
+        // Play sound effect
+        PlaySound(buttonClickSound);
+        
+        // Hide the about panel
+        if (aboutPanel != null)
+        {
+            aboutPanel.SetActive(false);
         }
     }
 }
