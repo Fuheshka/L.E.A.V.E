@@ -5,6 +5,8 @@ public class MainMenuController : MonoBehaviour
 {
     [Header("Audio")]
     [SerializeField] private string buttonClickSound = "button_click";
+    [SerializeField] private string closeExitSound = "close_exit";
+    
     //[SerializeField] private string gameStartSound = "respawn";
     
     [Header("UI Panels")]
@@ -34,7 +36,7 @@ public class MainMenuController : MonoBehaviour
     public void ExitGame()
     {
         // Play sound effect
-        PlaySound(buttonClickSound);
+        PlaySound(closeExitSound);
         
         Debug.Log("Exit button clicked. Quitting application.");
         Application.Quit();
@@ -66,7 +68,7 @@ public class MainMenuController : MonoBehaviour
     public void HideAboutPanel()
     {
         // Play sound effect
-        PlaySound(buttonClickSound);
+        PlaySound(closeExitSound);
         
         // Hide the about panel
         if (aboutPanel != null)
