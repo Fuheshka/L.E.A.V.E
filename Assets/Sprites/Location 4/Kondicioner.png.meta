@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 79f7eb9cdf9a143ceb42657ee4c192ed
+guid: 0fb635a029d49d846969e1787aaddc03
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1203236389595740849
-    second: white-paper-texture_0
+      213: -8671028071440620592
+    second: Kondicioner_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: white-paper-texture_0
+      name: Kondicioner_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 2000
-        height: 1333
+        x: 320
+        y: 590
+        width: 304
+        height: 253
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f458251f0ee3d4fe0800000000000000
-      internalID: -1203236389595740849
+      spriteID: 0d3675cf8e15aa780800000000000000
+      internalID: -8671028071440620592
       vertices: []
       indices: 
       edges: []
@@ -147,8 +147,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      white-paper-texture_0: -1203236389595740849
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

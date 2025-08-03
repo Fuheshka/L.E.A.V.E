@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 79f7eb9cdf9a143ceb42657ee4c192ed
+guid: 9eb585160a2f6c6438925cca9ff02328
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1203236389595740849
-    second: white-paper-texture_0
+      213: 2054953985353108127
+    second: Kran_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: white-paper-texture_0
+      name: Kran_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 2000
-        height: 1333
+        x: 64
+        y: 34
+        width: 710
+        height: 785
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f458251f0ee3d4fe0800000000000000
-      internalID: -1203236389595740849
+      spriteID: f9aceb613c9a48c10800000000000000
+      internalID: 2054953985353108127
       vertices: []
       indices: 
       edges: []
@@ -147,8 +147,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      white-paper-texture_0: -1203236389595740849
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
