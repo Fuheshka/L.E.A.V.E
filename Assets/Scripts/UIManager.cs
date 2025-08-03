@@ -22,7 +22,15 @@ public class UIManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Destroy(gameObject);
+        }
+    }
+
     public void FadeToWhite(float duration)
     {
         if (fadeImage != null)
