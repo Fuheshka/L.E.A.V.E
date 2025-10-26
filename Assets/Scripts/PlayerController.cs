@@ -10,6 +10,14 @@ public class PlayerController : MonoBehaviour
     public float jumpForce = 8f;
     public Transform startPoint;
 
+    [Header("Coyote Time")]
+    public float coyoteTime = 0.1f;
+    private float coyoteTimeCounter;
+
+    [Header("Jump Buffering")]
+    public float jumpBufferTime = 0.1f;
+    private float jumpBufferCounter;
+
     [Header("Shadow System")]
     public GameObject shadowPrefab;
     public int maxShadows = 3;
@@ -23,6 +31,12 @@ public class PlayerController : MonoBehaviour
     private Vector2 startPosition;
     private Vector2 checkpointPosition;
     private bool hasCheckpoint = false;
+
+    // Key bindings
+    private KeyCode jumpKey = KeyCode.W;
+    private KeyCode shadowKey = KeyCode.X;
+    private KeyCode resetKey = KeyCode.E;
+    private KeyCode resetShadowsKey = KeyCode.Q;
 
     [Header("Audio")]
     [SerializeField] private string jumpSoundName = "jump";
@@ -58,6 +72,15 @@ public class PlayerController : MonoBehaviour
         }
         startPosition = startPoint ? startPoint.position : transform.position;
         checkpointPosition = startPosition;
+        coyoteTimeCounter = 0f;
+        jumpBufferCounter = 0f;
+
+        // Load key bindings
+        jumpKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("JumpKey", "W"));
+        shadowKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("ShadowKey", "X"));
+        resetKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("ResetKey", "E"));
+        resetShadowsKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("ResetShadowsKey", "Q"));
+
         // Установить начальный масштаб
         transform.localScale = new Vector3(1, 1, 1);
         UpdateShadowCounter();
@@ -65,6 +88,15 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        coyoteTimeCounter -= Time.deltaTime;
+        jumpBufferCounter -= Time.deltaTime;
+
+        // Handle jump buffering
+        if (Input.GetKeyDown(jumpKey))
+        {
+            jumpBufferCounter = jumpBufferTime;
+        }
+
         HandleInput();
         HandleAnimations();
         HandleFlip();
@@ -76,9 +108,10 @@ public class PlayerController : MonoBehaviour
         Jump();
         HandleShadow();
         ResetShadows();
+        ResetPositionWithoutShadow();
         HandleRunSound();
 
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(resetKey))
         {
             if (hasCheckpoint)
             {
@@ -163,21 +196,18 @@ public class PlayerController : MonoBehaviour
 
     void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.W))
+        if (jumpBufferCounter > 0f && (isTouchingGroundBottom || coyoteTimeCounter > 0f))
         {
-            // Allow jump only if touching ground with bottom part of collider
-            if (isTouchingGroundBottom)
-            {
-                rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-                // Play jump sound
-                PlaySound(jumpSoundName);
-            }
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+            jumpBufferCounter = 0f; // Reset buffer after jumping
+            // Play jump sound
+            PlaySound(jumpSoundName);
         }
     }
 
     void HandleShadow()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && shadows.Count < maxShadows)
+        if (Input.GetKeyDown(shadowKey) && shadows.Count < maxShadows)
         {
             // Freeze and leave shadow
             GameObject shadow = Instantiate(shadowPrefab, transform.position, Quaternion.identity);
@@ -237,11 +267,19 @@ public class PlayerController : MonoBehaviour
     {
         checkpointPosition = pos;
         hasCheckpoint = true;
+
+        // Auto-return shadows when reaching checkpoint
+        foreach (var s in shadows)
+        {
+            Destroy(s);
+        }
+        shadows.Clear();
+        UpdateShadowCounter();
     }
 
     void ResetShadows()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(resetShadowsKey))
         {
             foreach (var s in shadows)
             {
@@ -249,6 +287,27 @@ public class PlayerController : MonoBehaviour
             }
             shadows.Clear();
             UpdateShadowCounter();
+        }
+    }
+
+    void ResetPositionWithoutShadow()
+    {
+        if (Input.GetKeyDown(resetKey))
+        {
+            if (hasCheckpoint)
+            {
+                // Teleport player to checkpoint without creating a shadow
+                transform.position = checkpointPosition;
+                rb.linearVelocity = Vector2.zero;
+
+                // Snap camera to player
+                CameraFollow cam = Camera.main.GetComponent<CameraFollow>();
+                if (cam != null)
+                    cam.SnapToTarget();
+
+                // Play respawn sound
+                PlaySound(respawnSoundName);
+            }
         }
     }
 
@@ -270,7 +329,13 @@ public class PlayerController : MonoBehaviour
         {
             if (contact.point.y - colliderBottomY <= groundContactThreshold)
             {
-                isTouchingGroundBottom = true;
+                // Check if the surface is not too steep (angle with up < 45 degrees)
+                float angle = Vector2.Angle(contact.normal, Vector2.up);
+                if (angle < 45f)
+                {
+                    isTouchingGroundBottom = true;
+                    coyoteTimeCounter = coyoteTime;
+                }
             }
 
             if (Mathf.Abs(contact.normal.x) > 0.5f && !isTouchingGroundBottom && rb.linearVelocity.y < FALLING_THRESHOLD)
@@ -283,6 +348,27 @@ public class PlayerController : MonoBehaviour
     void OnCollisionExit2D(Collision2D collision)
     {
         isTouchingGroundBottom = false;
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("DeathPlane"))
+        {
+            // Reset to checkpoint without destroying shadows
+            if (hasCheckpoint)
+            {
+                transform.position = checkpointPosition;
+                rb.linearVelocity = Vector2.zero;
+
+                // Snap camera to player
+                CameraFollow cam = Camera.main.GetComponent<CameraFollow>();
+                if (cam != null)
+                    cam.SnapToTarget();
+
+                // Play respawn sound
+                PlaySound(respawnSoundName);
+            }
+        }
     }
     
     // Helper method to play sound effects through AudioManager

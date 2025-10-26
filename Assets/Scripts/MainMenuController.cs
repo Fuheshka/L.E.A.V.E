@@ -11,6 +11,7 @@ public class MainMenuController : MonoBehaviour
     
     [Header("UI Panels")]
     [SerializeField] private GameObject aboutPanel;
+    [SerializeField] private GameObject optionsPanel;
     
     [Header("Scene Settings")]
     [SerializeField] private string gameSceneName = "SampleScene";
@@ -31,8 +32,11 @@ public class MainMenuController : MonoBehaviour
         // Play sound effect
         PlaySound(buttonClickSound);
         
-        // Implement options menu logic here
-        Debug.Log("Options button clicked - implement options menu.");
+        // Show the options panel
+        if (optionsPanel != null)
+        {
+            optionsPanel.SetActive(true);
+        }
     }
 
     // Method to be called when Exit button is clicked
