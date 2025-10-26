@@ -15,6 +15,15 @@ public class MainMenuController : MonoBehaviour
     
     [Header("Scene Settings")]
     [SerializeField] private string gameSceneName = "SampleScene";
+    
+    void Awake()
+    {
+        // Reset UI state when returning to main menu
+        if (UIManager.Instance != null)
+        {
+            UIManager.Instance.FadeFromWhite(0f); // Instantly reset fade
+        }
+    }
 
     // Method to be called when Play button is clicked
     public void PlayGame()
