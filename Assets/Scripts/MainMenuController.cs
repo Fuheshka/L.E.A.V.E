@@ -11,6 +11,9 @@ public class MainMenuController : MonoBehaviour
     
     [Header("UI Panels")]
     [SerializeField] private GameObject aboutPanel;
+    
+    [Header("Scene Settings")]
+    [SerializeField] private string gameSceneName = "SampleScene";
 
     // Method to be called when Play button is clicked
     public void PlayGame()
@@ -18,8 +21,8 @@ public class MainMenuController : MonoBehaviour
         // Play sound effect
         PlaySound(buttonClickSound);
         
-        // Load the main game scene, replace "GameScene" with your actual game scene name
-        SceneManager.LoadScene("SampleScene");
+        // Load the main game scene
+        SceneManager.LoadScene(gameSceneName);
     }
 
     // Method to be called when Options button is clicked

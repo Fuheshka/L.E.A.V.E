@@ -33,6 +33,13 @@ public class PlayerController : MonoBehaviour
     private float lastRunSoundTime = 0f;
     private bool isPlayingRunSound = false;
 
+    // Constants
+    private const float MOVE_THRESHOLD = 0.01f;
+    private const float FALLING_THRESHOLD = -0.3f;
+    private const float JUMPING_THRESHOLD = 0.1f;
+    private const float GROUND_CHECK_RADIUS = 0.1f;
+    private const float SLIDE_VELOCITY = -1f;
+
 
     void Start()
     {
@@ -58,7 +65,13 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        float move = Input.GetAxis("Horizontal");
+        HandleInput();
+        HandleAnimations();
+        HandleFlip();
+    }
+
+    private void HandleInput()
+    {
         Move();
         Jump();
         HandleShadow();
@@ -90,42 +103,46 @@ public class PlayerController : MonoBehaviour
                 UpdateShadowCounter();
             }
         }
+    }
 
-        // Переключение анимаций
-        if (anim != null)
+    private void HandleAnimations()
+    {
+        if (anim == null) return;
+
+        float move = Input.GetAxis("Horizontal");
+        bool canJump = isTouchingGroundBottom;
+        bool movingHorizontally = Mathf.Abs(move) > MOVE_THRESHOLD;
+
+        if (movingHorizontally && canJump)
         {
-            bool canJump = isTouchingGroundBottom;
-            bool movingHorizontally = Mathf.Abs(move) > 0.01f;
-
-            if (movingHorizontally && canJump)
-            {
-                anim.SetBool("isRunning", true);
-                anim.SetBool("isJumping", false);
-                anim.SetBool("isFalling", false);
-            }
-            else
-            {
-                anim.SetBool("isRunning", movingHorizontally);
-                bool jumping = !isTouchingGroundBottom && rb.linearVelocity.y > 0.1f;
-                // Increase falling threshold to -0.3f to avoid flickering falling animation
-                bool falling = !isTouchingGroundBottom && rb.linearVelocity.y < -0.3f;
-
-                if (isTouchingGroundBottom || rb.linearVelocity.y >= -0.3f)
-                {
-                    falling = false;
-                }
-
-                anim.SetBool("isJumping", jumping);
-                anim.SetBool("isFalling", falling);
-            }
-            anim.SetBool("isGrounded", isTouchingGroundBottom);
+            anim.SetBool("isRunning", true);
+            anim.SetBool("isJumping", false);
+            anim.SetBool("isFalling", false);
         }
+        else
+        {
+            anim.SetBool("isRunning", movingHorizontally);
+            bool jumping = !isTouchingGroundBottom && rb.linearVelocity.y > JUMPING_THRESHOLD;
+            bool falling = !isTouchingGroundBottom && rb.linearVelocity.y < FALLING_THRESHOLD;
 
-        // Поворот игрока в сторону движения (меняем только знак X)
+            if (isTouchingGroundBottom || rb.linearVelocity.y >= FALLING_THRESHOLD)
+            {
+                falling = false;
+            }
+
+            anim.SetBool("isJumping", jumping);
+            anim.SetBool("isFalling", falling);
+        }
+        anim.SetBool("isGrounded", isTouchingGroundBottom);
+    }
+
+    private void HandleFlip()
+    {
+        float move = Input.GetAxis("Horizontal");
         Vector3 scale = transform.localScale;
-        if (move > 0.01f)
+        if (move > MOVE_THRESHOLD)
             transform.localScale = new Vector3(Mathf.Abs(scale.x), scale.y, scale.z);
-        else if (move < -0.01f)
+        else if (move < -MOVE_THRESHOLD)
             transform.localScale = new Vector3(-Mathf.Abs(scale.x), scale.y, scale.z);
     }
 
@@ -175,7 +192,7 @@ public class PlayerController : MonoBehaviour
                 cam.SnapToTarget();
 
             // Проверка: находимся ли на земле после телепорта
-            Collider2D groundCheck = Physics2D.OverlapCircle(transform.position, 0.1f, LayerMask.GetMask("Default"));
+            Collider2D groundCheck = Physics2D.OverlapCircle(transform.position, GROUND_CHECK_RADIUS, LayerMask.GetMask("Default"));
             isTouchingGroundBottom = groundCheck != null;
             
             // Play respawn sound
@@ -237,23 +254,15 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        isTouchingGroundBottom = false;
-        float colliderBottomY = playerCollider.bounds.min.y;
-        foreach (var contact in collision.contacts)
-        {
-            if (contact.point.y - colliderBottomY <= groundContactThreshold)
-            {
-                isTouchingGroundBottom = true;
-            }
-
-            if (Mathf.Abs(contact.normal.x) > 0.5f && !isTouchingGroundBottom && rb.linearVelocity.y < -0.3f)
-            {
-                rb.linearVelocity = new Vector2(rb.linearVelocity.x, -1f);
-            }
-        }
+        CheckGroundCollision(collision);
     }
 
     void OnCollisionStay2D(Collision2D collision)
+    {
+        CheckGroundCollision(collision);
+    }
+
+    private void CheckGroundCollision(Collision2D collision)
     {
         isTouchingGroundBottom = false;
         float colliderBottomY = playerCollider.bounds.min.y;
@@ -264,9 +273,9 @@ public class PlayerController : MonoBehaviour
                 isTouchingGroundBottom = true;
             }
 
-            if (Mathf.Abs(contact.normal.x) > 0.5f && !isTouchingGroundBottom && rb.linearVelocity.y < -0.3f)
+            if (Mathf.Abs(contact.normal.x) > 0.5f && !isTouchingGroundBottom && rb.linearVelocity.y < FALLING_THRESHOLD)
             {
-                rb.linearVelocity = new Vector2(rb.linearVelocity.x, -1f);
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, SLIDE_VELOCITY);
             }
         }
     }

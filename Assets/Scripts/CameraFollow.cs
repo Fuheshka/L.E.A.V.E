@@ -2,9 +2,14 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
+    [Tooltip("The target transform to follow.")]
     public Transform target;
-    public float smoothTime = 0.2f;
-    public Vector3 offset = new Vector3(0, 0, -10);
+    
+    [Tooltip("How smoothly the camera follows the target.")]
+    [SerializeField] private float smoothTime = 0.2f;
+    
+    [Tooltip("Offset from the target position.")]
+    [SerializeField] private Vector3 offset = new Vector3(0, 0, -10);
 
     private Vector3 velocity = Vector3.zero;
 

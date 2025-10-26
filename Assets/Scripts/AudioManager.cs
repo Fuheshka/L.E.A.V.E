@@ -307,9 +307,24 @@ public class AudioManager : MonoBehaviour
         return new List<string>(musicClips.Keys).ToArray();
     }
 
-    // Get list of available SFX
-    public string[] GetSFXList()
+    private void Update()
     {
-        return new List<string>(sfxClips.Keys).ToArray();
+        CleanupFinishedSounds();
+    }
+
+    private void CleanupFinishedSounds()
+    {
+        List<string> keysToRemove = new List<string>();
+        foreach (var kvp in playing3DSounds)
+        {
+            if (kvp.Value == null || !kvp.Value.isPlaying)
+            {
+                keysToRemove.Add(kvp.Key);
+            }
+        }
+        foreach (var key in keysToRemove)
+        {
+            playing3DSounds.Remove(key);
+        }
     }
 }

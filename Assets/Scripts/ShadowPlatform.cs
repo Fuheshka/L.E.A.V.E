@@ -6,7 +6,7 @@ public class ShadowPlatform : MonoBehaviour
     {
         // Сделать тень немного прозрачной
         var sr = GetComponent<SpriteRenderer>();
-        if (sr)
+        if (sr != null)
         {
             var color = sr.color;
             color.a = 0.5f;
@@ -18,7 +18,7 @@ public class ShadowPlatform : MonoBehaviour
     {
         // Отключить любые движения
         var rb = GetComponent<Rigidbody2D>();
-        if (rb)
+        if (rb != null)
         {
             rb.bodyType = RigidbodyType2D.Static;
         }

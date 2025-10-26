@@ -25,26 +25,22 @@ public class Checkpoint : MonoBehaviour
     {
         sr = GetComponent<SpriteRenderer>();
         sr.sprite = redFlag;
+        
+        // Find player once at start
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            playerTransform = player.transform;
+        }
     }
 
     void Update()
     {
-        if (activated) return;
+        if (activated || playerTransform == null) return;
         
         // Limit how often we check distance to improve performance
         if (Time.time - lastDistanceCheck < checkInterval) return;
         lastDistanceCheck = Time.time;
-        
-        // Find player if not found yet
-        if (playerTransform == null)
-        {
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            if (player != null)
-            {
-                playerTransform = player.transform;
-            }
-            return;
-        }
         
         // Check distance to player
         float distance = Vector2.Distance(transform.position, playerTransform.position);

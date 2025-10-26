@@ -10,6 +10,9 @@ public class UIManager : MonoBehaviour
     public Image fadeImage;
     public float fadeDuration = 1f;
     
+    [Header("Settings")]
+    [SerializeField] private bool allowEscapeQuit = false;
+    
     private void Awake()
     {
         if (Instance == null)
@@ -25,7 +28,7 @@ public class UIManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (allowEscapeQuit && Input.GetKeyDown(KeyCode.Escape))
         {
             Destroy(gameObject);
         }
